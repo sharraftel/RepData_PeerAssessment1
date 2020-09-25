@@ -9,7 +9,35 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
 
-This is an R Markdown document.generated for the *Peer-graded Assignment: Course Project 1* 
+This is an R Markdown document.generated for the *Peer-graded Assignment: Course Project 1*  
+
+## first task  
+
+first task is loading the data, this chunk will first check if the data is downloaded or not and then unzips it.
+```{r}
+if (!file.exists("activity.csv") )
+    {
+     dlurl <- 'https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip'  
+     download.file(dlurl,destfile='repdata%2Fdata%2Factivity.zip',mode='wb')  
+     unzip('repdata%2Fdata%2Factivity.zip')
+    }
+
+# Read data
+data <- read.csv("activity.csv")
+```
+
+We first need to restructure our data in a way that is more suitable to do analysis on, we would need to sum the steps of each day together to make our life a bit easier.
+```{r}
+num_of_steps = aggregate(steps~date,data,sum) # this puts all the steps of each day together
+```
+
+run this to check if it worked  
+
+```{r}
+head(num_of_steps)
+```
+
+## secound task
+
 
