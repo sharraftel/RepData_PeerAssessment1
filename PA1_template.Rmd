@@ -1,25 +1,87 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+title: 'Peer-graded Assignment: Course Project 1'
+author: "sharraf eltelbani"
+date: "9/24/2020"
+output: html_document
 ---
 
-
-## Loading and preprocessing the data
-
-
-
-## What is mean total number of steps taken per day?
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 
+This is an R Markdown document.generated for the *Peer-graded Assignment: Course Project 1*  
 
-## What is the average daily activity pattern?
+## first task  
+
+first task is loading the data, this chunk will first check if the data is downloaded or not and then unzips it.
+```{r}
+if (!file.exists("activity.csv") )
+    {
+     dlurl <- 'https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip'  
+     download.file(dlurl,destfile='repdata%2Fdata%2Factivity.zip',mode='wb')  
+     unzip('repdata%2Fdata%2Factivity.zip')
+    }
+
+# Read data
+data <- read.csv("activity.csv")
+```
+
+We first need to restructure our data in a way that is more suitable to do analysis on, we would need to sum the steps of each day together to make our life a bit easier.
+```{r}
+num_of_steps = aggregate(steps~date,data,sum) # this puts all the steps of each day together
+```
+
+run this to check if it worked  
+
+```{r}
+head(num_of_steps)
+```
+
+## secound task
+
+This task wants a histogram of the total number of steps taken each day.  
+this can be done with the "hist" command in R.
+```{r}
+hist(num_of_steps$steps,col = "red",xlab="Number of Steps")
+```
+
+last part of this task asks about the median and mean of the number of steps taken each day, this one is straight forward and can be done with a single command each
+
+```{r}
+med <- median(num_of_steps$steps)
+men <- mean(num_of_steps$steps)
+
+```
+
+to view median :
+```{r}
+med
+```
+
+to view mean:
+```{r}
+men
+```
+
+## third task
+
+for this task we would need to do the same thing we did in the first task, but this time using the interval of the activity instead of date.
+
+```{r}
+interval = aggregate(steps~interval,data,sum)
+```
+
+now that we have the data in a neat format we can plot it!
+
+```{r}
+plot(interval$interval,interval$steps, type="l", xlab="Interval", ylab="Number of Steps",main="Average # of Steps per Day by Interval")
+```
+
+next we need to figure out what is the the 5 minute window that has the max number of steps, R already has a "max" function for that.
+
+```{R}
+interval[which.max(interval$steps),1]
+```
 
 
-
-## Imputing missing values
-
-
-
-## Are there differences in activity patterns between weekdays and weekends?
