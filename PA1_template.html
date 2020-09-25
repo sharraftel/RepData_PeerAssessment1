@@ -371,7 +371,7 @@ summary {
 
 <p>This is an R Markdown document.generated for the <em>Peer-graded Assignment: Course Project 1</em></p>
 <div id="first-task" class="section level2">
-<h2>first task</h2>
+<h2>First task</h2>
 <p>first task is loading the data, this chunk will first check if the data is downloaded or not and then unzips it.</p>
 <pre class="r"><code>if (!file.exists(&quot;activity.csv&quot;) )
     {
@@ -395,7 +395,7 @@ data &lt;- read.csv(&quot;activity.csv&quot;)</code></pre>
 ## 6 2012-10-07 11015</code></pre>
 </div>
 <div id="secound-task" class="section level2">
-<h2>secound task</h2>
+<h2>Secound task</h2>
 <p>This task wants a histogram of the total number of steps taken each day.<br />
 this can be done with the “hist” command in R.</p>
 <pre class="r"><code>hist(num_of_steps$steps,col = &quot;red&quot;,xlab=&quot;Number of Steps&quot;)</code></pre>
@@ -411,7 +411,7 @@ men &lt;- mean(num_of_steps$steps)</code></pre>
 <pre><code>## [1] 10766.19</code></pre>
 </div>
 <div id="third-task" class="section level2">
-<h2>third task</h2>
+<h2>Third task</h2>
 <p>for this task we would need to do the same thing we did in the first task, but this time using the interval of the activity instead of date.</p>
 <pre class="r"><code>interval = aggregate(steps~interval,data,sum)</code></pre>
 <p>now that we have the data in a neat format we can plot it!</p>
@@ -420,6 +420,40 @@ men &lt;- mean(num_of_steps$steps)</code></pre>
 <p>next we need to figure out what is the the 5 minute window that has the max number of steps, R already has a “max” function for that.</p>
 <pre class="r"><code>interval[which.max(interval$steps),1]</code></pre>
 <pre><code>## [1] 835</code></pre>
+</div>
+<div id="forth-task" class="section level2">
+<h2>Forth task</h2>
+<p>The total number of missing values in the data set.</p>
+<ul>
+<li>for steps:</li>
+</ul>
+<pre class="r"><code>sum(is.na(as.character(data$steps)))</code></pre>
+<pre><code>## [1] 2304</code></pre>
+<ul>
+<li>for date:</li>
+</ul>
+<pre class="r"><code>sum(is.na(as.character(data$date)))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<ul>
+<li>for interval:</li>
+</ul>
+<pre class="r"><code>sum(is.na(as.character(data$interval)))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>from this its clear that only the steps have NA values, my stratigy is just putting the mean of that 5 minut interval.</p>
+<pre class="r"><code>StepsAverage &lt;- aggregate(steps ~ interval, data = data, FUN = mean)
+fill &lt;- numeric()
+for (i in 1:nrow(data)) {
+    obs &lt;- data[i, ]
+    if (is.na(obs$steps)) {
+        steps &lt;- subset(StepsAverage, interval == obs$interval)$steps
+    } else {
+        steps &lt;- obs$steps
+    }
+    fill &lt;- c(fill, steps)
+}</code></pre>
+<p>and creating a new data set using the function that was just created:</p>
+<pre class="r"><code>newdata &lt;-data
+newdata$steps &lt;- fill</code></pre>
 </div>
 
 

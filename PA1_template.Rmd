@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is an R Markdown document.generated for the *Peer-graded Assignment: Course Project 1*  
 
-## first task  
+## First task  
 
 first task is loading the data, this chunk will first check if the data is downloaded or not and then unzips it.
 ```{r}
@@ -38,7 +38,7 @@ run this to check if it worked
 head(num_of_steps)
 ```
 
-## secound task
+## Secound task
 
 This task wants a histogram of the total number of steps taken each day.  
 this can be done with the "hist" command in R.
@@ -64,7 +64,7 @@ to view mean:
 men
 ```
 
-## third task
+## Third task
 
 for this task we would need to do the same thing we did in the first task, but this time using the interval of the activity instead of date.
 
@@ -83,5 +83,58 @@ next we need to figure out what is the the 5 minute window that has the max numb
 ```{R}
 interval[which.max(interval$steps),1]
 ```
+
+## Forth task
+
+The total number of missing values in the data set.  
+
+* for steps:
+```{r}
+sum(is.na(as.character(data$steps)))
+```
+
+* for date:
+
+```{r}
+sum(is.na(as.character(data$date)))
+```
+
+* for interval:
+```{r}
+sum(is.na(as.character(data$interval)))
+
+```
+
+from this its clear that only the steps have NA values, my stratigy is just putting the mean of that 5 minut interval.
+```{r}
+StepsAverage <- aggregate(steps ~ interval, data = data, FUN = mean)
+fill <- numeric()
+for (i in 1:nrow(data)) {
+    obs <- data[i, ]
+    if (is.na(obs$steps)) {
+        steps <- subset(StepsAverage, interval == obs$interval)$steps
+    } else {
+        steps <- obs$steps
+    }
+    fill <- c(fill, steps)
+}
+```
+
+and creating a new data set using the function that was just created:
+
+```{r}
+newdata <-data
+newdata$steps <- fill
+```
+
+
+
+
+
+
+
+
+
+
 
 
