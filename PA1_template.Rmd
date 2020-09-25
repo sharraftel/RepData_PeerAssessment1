@@ -127,12 +127,63 @@ newdata <-data
 newdata$steps <- fill
 ```
 
+check what the outout looks like
+
+```{r}
+head(newdata)
+```
+
+making a histogram of the new data set!
+
+```{r}
+num_of_steps = aggregate(steps~date,newdata,sum)
+hist(num_of_steps$steps,col = "red",xlab="Number of Steps")
+
+```
+
+as for the new mean and median:
+
+```{r}
+nmed <- median(num_of_steps$steps)
+nmen <- mean(num_of_steps$steps)
+
+```
+
+to view median :
+```{r}
+nmed
+```
+
+to view mean:
+```{r}
+nmen
+```
+
+the difference they have is:
+
+```{r}
+men_d <- men - nmen
+med_d <- med - nmed
+
+men_d
+med_d
+```
+
+from that we see the mean is the same but the median is different.
 
 
+## Fifth task
 
+we need to figer out if there differences in activity patterns between weekdays and weekends?
 
-
-
+```{r}
+weekdays <- c("Monday", "Tuesday", "Wednesday", "Thursday", 
+              "Friday")
+newdata$dow = as.factor(ifelse(is.element(weekdays(as.Date(newdata$date)),weekdays), "Weekday", "Weekend"))
+StepsTotalUnion <- aggregate(steps ~ interval + dow, newdata, mean)
+library(lattice)
+xyplot(StepsTotalUnion$steps ~ StepsTotalUnion$interval|StepsTotalUnion$dow, main="Average Steps per Day by Interval",xlab="Interval", ylab="Steps",layout=c(1,2), type="l")
+```
 
 
 
